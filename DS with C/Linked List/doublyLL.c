@@ -1,17 +1,18 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-struct DllNode{
+struct DllNode
+{
     int data;
-    struct DllNode * prev;
-    struct DllNode * next;
+    struct DllNode *prev;
+    struct DllNode *next;
 };
 
-struct DllNode * insertBegin(struct DllNode *head, int data)
+struct DllNode *insertBegin(struct DllNode *head, int data)
 {
-    struct DllNode * curr = head;
-    struct DllNode * new = (struct DllNode * ) malloc(sizeof(struct DllNode));
-    if(!new)
+    struct DllNode *curr = head;
+    struct DllNode *new = (struct DllNode *)malloc(sizeof(struct DllNode));
+    if (!new)
     {
         printf("\nMemory Error!");
         return head;
@@ -20,12 +21,12 @@ struct DllNode * insertBegin(struct DllNode *head, int data)
     new->data = data;
     new->next = NULL;
 
-    if(curr == NULL)        //no previous node
+    if (curr == NULL) //no previous node
     {
         head = new;
         return head;
     }
-    
+
     //already some node exits
     new->next = head;
     head->prev = new;
@@ -33,11 +34,11 @@ struct DllNode * insertBegin(struct DllNode *head, int data)
     return head;
 }
 
-struct DllNode * insertEnd(struct DllNode * head, int data)
+struct DllNode *insertEnd(struct DllNode *head, int data)
 {
-    struct DllNode * new = (struct DllNode *) malloc(sizeof(struct DllNode));
-     struct DllNode * curr = head;
-    if(!new)
+    struct DllNode *new = (struct DllNode *)malloc(sizeof(struct DllNode));
+    struct DllNode *curr = head;
+    if (!new)
     {
         printf("\nMemory Error!");
         return head;
@@ -46,29 +47,27 @@ struct DllNode * insertEnd(struct DllNode * head, int data)
     new->data = data;
     new->next = NULL;
 
-    if(head == NULL)
+    if (head == NULL)
     {
         head = new;
         return head;
     }
 
-    while(curr->next!=NULL)
+    while (curr->next != NULL)
     {
-        curr=curr->next;
+        curr = curr->next;
     }
     curr->next = new;
     new->prev = curr;
     return head;
-
-
 }
 
-struct DllNode * insertAtPosition(struct DllNode * head, int data, int pos)
+struct DllNode *insertAtPosition(struct DllNode *head, int data, int pos)
 {
-    struct DllNode *new = (struct DllNode *) malloc (sizeof(struct DllNode ));
+    struct DllNode *new = (struct DllNode *)malloc(sizeof(struct DllNode));
     struct DllNode *temp = head;
     //pos--;
-    if(!new)
+    if (!new)
     {
         printf("\nMemory Error!");
         return head;
@@ -78,24 +77,24 @@ struct DllNode * insertAtPosition(struct DllNode * head, int data, int pos)
     new->data = data;
     new->next = NULL;
 
-    if(pos<=1)
+    if (pos <= 1)
     {
         new->next = head;
-       if(head)
-       {
+        if (head)
+        {
             head->prev = new;
-       }
+        }
         head = new;
         return head;
     }
 
     int k = 1;
-    while(k<pos-1 && temp->next!=NULL)
+    while (k < pos - 1 && temp->next != NULL)
     {
-        temp=temp->next;
+        temp = temp->next;
         k++;
     }
-    if(k<pos-1)
+    if (k < pos - 1)
     {
         printf("\n positon not available!");
         return head;
@@ -103,11 +102,11 @@ struct DllNode * insertAtPosition(struct DllNode * head, int data, int pos)
 
     new->next = temp->next;
     new->prev = temp;
-    if(temp->next)
+    if (temp->next)
     {
         temp->next->prev = new;
     }
-    temp->next =new;
+    temp->next = new;
     return head;
 
     // Another method
@@ -147,11 +146,99 @@ void llTraversal(struct DllNode *head)
     }
 }
 
+struct DllNode *deleteFront(struct DllNode *head)
+{
+    struct DllNode *temp;
+    if (head == NULL)
+    {
+        printf("\nAlready empty!");
+        return NULL;
+    }
+
+    temp = head;
+    printf("\n Deleted node: %d", temp->data);
+    head = head->next;
+
+    if (head != NULL)
+    {
+        head->prev = NULL;
+    }
+
+    free(temp);
+    return head;
+}
+struct DllNode *deleteEnd(struct DllNode *head)
+{
+    struct DllNode *temp, *current = head;
+    if (head == NULL)
+    {
+        printf("\n Empty List");
+        return head;
+    }
+    while (head->next != NULL)
+    {
+        head = head->next;
+    }
+    current = head->prev;
+    if (current != NULL)
+    {
+        current->next = head->next;
+    }
+    printf("\n Deleted node: %d", head->data);
+    free(head);
+    return current;
+}
+
+struct DllNode *deletePosition(struct DllNode *head, int pos)
+{
+    struct DllNode * temp,* temp2;
+    int k=1;
+    if(head == NULL)
+    {
+        printf("\nList is Empty");
+        return head;
+    }
+    
+    if(pos <= 1)
+    {
+        temp = head;
+        
+        head = head->next;
+        if(head!=NULL)
+        {
+            head->prev = NULL;
+        }
+         printf("\n Deleted node: %d", temp->data);
+        free(temp);
+        return head;
+    }
+    temp = head;
+    while(k<pos && temp->next!=NULL)
+    {
+        temp = temp->next;
+        k++;
+    }
+    if(k <pos)
+    {
+        printf("\nposition does not exist");
+        return head;
+    }
+    temp2 = temp->prev;
+    temp2->next = temp->next;
+    if(temp->next !=NULL)
+    {
+        temp->next->prev = temp2;
+    }
+    printf("\n Deleted node: %d", temp->data);
+
+    free(temp);
+    return head;
+}
 
 int main()
 {
-    struct DllNode * head=NULL;
-   int d, p;
+    struct DllNode *head = NULL;
+    int d, p;
     while (1)
     {
         int ch;
@@ -163,12 +250,12 @@ int main()
         case 1:
             printf("\n Enter the data to be stored in beginning: ");
             scanf("%d", &d);
-            head = insertBegin(head,d);
+            head = insertBegin(head, d);
             break;
         case 2:
             printf("\n Enter the data to be stored at end: ");
             scanf("%d", &d);
-             head = insertEnd(head,d);
+            head = insertEnd(head, d);
             break;
         case 3:
             printf("\n Enter the position and data: ");
@@ -177,17 +264,17 @@ int main()
             break;
         case 4:
             printf("\n Deleting from the front ");
-            //head = deleteFront(head);
+            head = deleteFront(head);
             break;
         case 5:
             printf("\n Deleting from last element ");
-            //head = deleteLast(head);
+            head = deleteEnd(head);
             break;
         case 6:
             printf("\n Deleting element at positon x ");
             printf("\n Enter the position to delete node: ");
             scanf("%d", &p);
-            //head = deletePosition(head,p);
+            head = deletePosition(head,p);
             break;
         case 7:
             printf("\n The linked list elements are: \n ");
