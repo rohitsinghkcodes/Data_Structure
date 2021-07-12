@@ -66,6 +66,57 @@ struct CLL *insertEnd(struct CLL *head, int data)
     new->next = head;
     return head;
 }
+
+//deletion
+struct CLL *deleteFront(struct CLL *head)
+{
+    struct CLL *temp = head,*curr = head;
+    if (head == NULL)
+    {
+        printf("\n already Empty!");
+        return head;
+    }
+    while (temp->next != head){
+         temp = temp->next;
+    }
+    temp->next = head->next;
+    if(head->next != head)      //more than single node
+    {
+        head = head->next;
+    }else{
+        head = NULL;        //only single node
+    }
+    
+    printf("\n Deleted node: %d",curr->data);
+    free(curr);
+    return head;
+}
+
+struct CLL *deleteEnd(struct CLL *head)
+{
+    struct CLL *temp = head,*prev;
+    if (head == NULL)
+    {
+        printf("\n already Empty!");
+        return head;
+    }
+    while (temp->next != head){
+        prev = temp;
+         temp = temp->next;
+    }
+
+    if(temp!=head)
+    {
+        prev->next = temp->next;
+    }
+    else
+    {
+        head = NULL;
+    }
+    printf("\n Deleted node: %d",temp->data);
+    free(temp);
+    return head;
+}
 //Traversal
 void llTraversal(struct CLL *head)
 {
@@ -102,9 +153,17 @@ int main()
             head = insertFront(head, d);
             break;
         case 2:
-            printf("\n Enter the data to be stored in beginning: ");
+            printf("\n Enter the data to be stored in front: ");
             scanf("%d", &d);
             head = insertEnd(head, d);
+            break;
+        case 3:
+            printf("\n deleting from front: ");
+            head = deleteFront(head);
+            break;
+        case 4:
+            printf("\n deleting from End: ");
+            head = deleteEnd(head);
             break;
         case 5:
             printf("\n The linked list elements are: \n ");
